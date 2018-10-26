@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
 import com.example.android.bookstoreudacity.data.ProductDbHelper;
 
+// Icon used on FAB used from www.flaticon.com
+// Direct Link https://www.flaticon.com/free-icon/book-and-plus-sign_14037
 
 public class CatalogActivity extends AppCompatActivity {
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".EditorActivity">
+
+    <LinearLayout style="@style/CategoryParentLayout">
+
+        <!-- Product Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="Product Info" />
+
+        <LinearLayout style="@style/CategoryChildLayout">
+
+            <!-- Product Name -->
+            <EditText
+                android:id="@+id/edit_product_name"
+                style="@style/EditorFieldStyle"
+                android:hint="Product Name"
+                android:inputType="textCapWords|textAutoCorrect" />
+            <!-- Product Price -->
+            <EditText
+                android:id="@+id/edit_product_price"
+                style="@style/EditorFieldStyle"
+                android:hint="Price"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/edit_product_quantity"
+                style="@style/EditorFieldStyle"
+                android:hint="Quantity"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/CategoryParentLayout">
+
+        <!-- Supplier Info -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="Supply info" />
+
+        <LinearLayout style="@style/CategoryChildLayout">
+
+            <EditText
+                android:id="@+id/edit_supplier_name"
+                style="@style/EditorFieldStyle"
+                android:hint="Supplier Name"
+                android:inputType="textCapWords" />
+
+            <EditText
+                android:id="@+id/edit_supplier_phone"
+                style="@style/EditorFieldStyle"
+                android:hint="Phone Number"
+                android:inputType="phone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

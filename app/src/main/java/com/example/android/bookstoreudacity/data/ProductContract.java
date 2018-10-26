@@ -15,11 +15,5 @@ public final class ProductContract {
         public final static String COLUMN_PRODUCT_QUANTITY = "quantity";
         public final static String COLUMN_SUPPLIER_NAME = "supplier_name";
         public final static String COLUMN_SUPPLIER_PHONE = "supplier_phone";
-
-        /**
-         * Price and Quality defaults set at 0
-         */
-        public final static double DEFAULT_PRICE = 0.00;
-        public final static int DEFAULT_QUANTITY = 0;
     }
 }

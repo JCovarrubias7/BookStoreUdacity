@@ -24,19 +24,19 @@
 
     <!-- Child Linear Layout for EditText fields in activity_editor -->
     <style name="CategoryChildLayout">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">@dimen/category_child_layout_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">2</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingLeft">@dimen/category_child_layout_padding_left</item>
     </style>
 
     <!-- Style for a category in activity_editor -->
     <style name="CategoryStyle">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">@dimen/category_style_width</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingTop">@dimen/category_style_padding_top</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>

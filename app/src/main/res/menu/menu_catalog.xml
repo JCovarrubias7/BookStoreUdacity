@@ -6,12 +6,12 @@
 
     <item
         android:id="@+id/action_inset_test_data"
-        android:title="Insert Test Data"
+        android:title="@string/test_data"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete_all_entries"
-        android:title="Delete All Products"
+        android:title="@string/delete_all_data"
         app:showAsAction="never" />
 
 </menu>

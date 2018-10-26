@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="@dimen/parent_linear_layoutt_padding"
     tools:context=".EditorActivity">
 
     <LinearLayout style="@style/CategoryParentLayout">
@@ -12,7 +12,7 @@
         <!-- Product Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="Product Info" />
+            android:text="@string/product_info" />
 
         <LinearLayout style="@style/CategoryChildLayout">
 
@@ -20,19 +20,19 @@
             <EditText
                 android:id="@+id/edit_product_name"
                 style="@style/EditorFieldStyle"
-                android:hint="Product Name"
+                android:hint="@string/product_name"
                 android:inputType="textCapWords|textAutoCorrect" />
             <!-- Product Price -->
             <EditText
                 android:id="@+id/edit_product_price"
                 style="@style/EditorFieldStyle"
-                android:hint="Price"
+                android:hint="@string/product_price"
                 android:inputType="numberDecimal" />
 
             <EditText
                 android:id="@+id/edit_product_quantity"
                 style="@style/EditorFieldStyle"
-                android:hint="Quantity"
+                android:hint="@string/product_quantity"
                 android:inputType="number" />
 
         </LinearLayout>
@@ -44,20 +44,20 @@
         <!-- Supplier Info -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="Supply info" />
+            android:text="@string/supplier_info" />
 
         <LinearLayout style="@style/CategoryChildLayout">
 
             <EditText
                 android:id="@+id/edit_supplier_name"
                 style="@style/EditorFieldStyle"
-                android:hint="Supplier Name"
+                android:hint="@string/supplier_name"
                 android:inputType="textCapWords" />
 
             <EditText
                 android:id="@+id/edit_supplier_phone"
                 style="@style/EditorFieldStyle"
-                android:hint="Phone Number"
+                android:hint="@string/supplier_phone"
                 android:inputType="phone" />
 
         </LinearLayout>

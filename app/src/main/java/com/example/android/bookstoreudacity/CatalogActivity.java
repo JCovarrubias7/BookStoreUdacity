@@ -79,15 +79,20 @@ public class CatalogActivity extends AppCompatActivity {
         TextView displayView = (TextView) findViewById(R.id.text_view_product);
 
         try {
+            // Set up strings for header
+            String mDisplayViewTableContains = getResources().getString(R.string.display_view_table_contains);
+            String mContainsProducts = getResources().getString(R.string.contains_products);
+            String displayViewHeader = mDisplayViewTableContains + cursor.getCount() + mContainsProducts;
+            String mDashDivider = getResources().getString(R.string.dash_divider);
             // Create a header that looks like this
             // The products table contains <number of rows in Cursor> products.
             //_id - product_name - price - quantity - supplier_name - supplier_phone
-            displayView.setText("The products table contains " + cursor.getCount() + " products.\n\n");
-            displayView.append(ProductEntry._ID + " - " +
-                    ProductEntry.COLUMN_PRODUCT_NAME + " - " +
-                    ProductEntry.COLUMN_PRODUCT_PRICE + " - " +
-                    ProductEntry.COLUMN_PRODUCT_QUANTITY + " - " +
-                    ProductEntry.COLUMN_SUPPLIER_NAME + " - " +
+            displayView.setText(displayViewHeader);
+            displayView.append(ProductEntry._ID + mDashDivider +
+                    ProductEntry.COLUMN_PRODUCT_NAME + mDashDivider +
+                    ProductEntry.COLUMN_PRODUCT_PRICE + mDashDivider +
+                    ProductEntry.COLUMN_PRODUCT_QUANTITY + mDashDivider +
+                    ProductEntry.COLUMN_SUPPLIER_NAME + mDashDivider +
                     ProductEntry.COLUMN_SUPPLIER_PHONE + " \n"
             );
 
@@ -113,11 +118,11 @@ public class CatalogActivity extends AppCompatActivity {
                 String currentSupplierPhone = cursor.getString(supplierPhoneColumnIndex);
 
                 // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentId + " - " +
-                        currentProductName + " - " +
-                        currentProductPrize + " - " +
-                        currentProductQuantity + " - " +
-                        currentSupplierName + " - " +
+                displayView.append(("\n" + currentId + mDashDivider +
+                        currentProductName + mDashDivider +
+                        currentProductPrize + mDashDivider +
+                        currentProductQuantity + mDashDivider +
+                        currentSupplierName + mDashDivider +
                         currentSupplierPhone));
             }
         } finally {
@@ -132,22 +137,32 @@ public class CatalogActivity extends AppCompatActivity {
      * Test Data input
      */
     private void insertTestProduct() {
+        // Strings for insertTestProduct method
+        String mTestName = getResources().getString(R.string.test_name);
+        String mTestPrice = getResources().getString(R.string.test_price);
+        String mTestQuantity = getResources().getString(R.string.test_quantity);
+        String mTestSupplierName = getResources().getString(R.string.test_supplier_name);
+        String mTestSupplierPhone = getResources().getString(R.string.test_supplier_phone);
+
         // Get the database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Create a new set of ContentValues, this equals one entry
         ContentValues values = new ContentValues();
 
         // Add Values to values
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "The Client");
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 9.99);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 7);
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Amazon");
-        values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, "18882804331");
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, mTestName);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, mTestPrice);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, mTestQuantity);
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, mTestSupplierName);
+        values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, mTestSupplierPhone);
 
         // Insert the values into the Database
         long newRowId = db.insert(ProductEntry.TABLE_NAME, null, values);
 
         Log.v("CatalogActivity", "New Row ID: " + newRowId);
+
+        // Update displayView after test data has been inserted
+        displayDatabaseInfo();
     }
 
     /**

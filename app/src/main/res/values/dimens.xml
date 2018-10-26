@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- activity_catalog -->
+    <!-- TextView -->
+    <dimen name="activity_catalog_padding">16dp</dimen>
+    <!-- Floating Action Button -->
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- activity_editor -->
+    <!-- Parent Linear Layout -->
+    <dimen name="parent_linear_layoutt_padding">16dp</dimen>
+
+    <!-- styles -->
+    <dimen name="category_child_layout_width">0dp</dimen>
+    <dimen name="category_child_layout_padding_left">4dp</dimen>
+
+    <dimen name="category_style_width">0dp</dimen>
+    <dimen name="category_style_padding_top">16dp</dimen>
+
+</resources>

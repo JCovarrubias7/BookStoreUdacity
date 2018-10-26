@@ -41,7 +41,7 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * EditText field to enter the supplier phone number
      */
-    private EditText mSupplierPhoneNuber;
+    private EditText mSupplierPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -53,7 +53,7 @@ public class EditorActivity extends AppCompatActivity {
         mProductPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mProductQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
-        mSupplierPhoneNuber = (EditText) findViewById(R.id.edit_supplier_phone);
+        mSupplierPhoneNumber = (EditText) findViewById(R.id.edit_supplier_phone);
     }
 
     private void insertProduct() {
@@ -63,7 +63,7 @@ public class EditorActivity extends AppCompatActivity {
         String productQualityString = mProductQuantityEditText.getText().toString().trim();
         int productQualityInt = Integer.parseInt(productQualityString);
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
-        String supplierPhoneNumberString = mSupplierPhoneNuber.getText().toString().trim();
+        String supplierPhoneNumberString = mSupplierPhoneNumber.getText().toString().trim();
 
         ProductDbHelper mDbHelper = new ProductDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -80,10 +80,13 @@ public class EditorActivity extends AppCompatActivity {
         Log.v("EditorActivity", "New Row ID: " + newRowId);
 
         //Toast message
+        String mErrorSaving = getResources().getString(R.string.error_saving);
+        String mSuccessfulSaving = getResources().getString(R.string.successful_saving);
+        String successfulMessage = mSuccessfulSaving + newRowId;
         if (newRowId == -1) {
-            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, mErrorSaving, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Pet saved with row ID: " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, successfulMessage, Toast.LENGTH_SHORT).show();
         }
     }
 

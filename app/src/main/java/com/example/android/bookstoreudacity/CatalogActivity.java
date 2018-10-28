@@ -3,25 +3,21 @@ package com.example.android.bookstoreudacity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
-import com.example.android.bookstoreudacity.data.ProductDbHelper;
 
 // Icon used on FAB used from www.flaticon.com
 // Direct Link https://www.flaticon.com/free-icon/book-and-plus-sign_14037
 
 public class CatalogActivity extends AppCompatActivity {
-
-    private ProductDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +33,6 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        mDbHelper = new ProductDbHelper(this);
     }
 
     /**
@@ -55,9 +49,6 @@ public class CatalogActivity extends AppCompatActivity {
      * database.
      */
     private void displayDatabaseInfo() {
-        // Open database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         // Set up projection. In this case, we want them all.
         String[] projection = {
                 ProductEntry._ID,
@@ -67,12 +58,12 @@ public class CatalogActivity extends AppCompatActivity {
                 ProductEntry.COLUMN_SUPPLIER_NAME,
                 ProductEntry.COLUMN_SUPPLIER_PHONE
         };
-        // Set the Cursor aka the query.
-        Cursor cursor = db.query(
-                ProductEntry.TABLE_NAME,
+
+        // Perform a query on the provider using the ContentResolver.
+        // Use the {@link ProductEntry#CONTENT_URI} to access the product data.
+        Cursor cursor = getContentResolver().query(
+                ProductEntry.CONTENT_URI,
                 projection,
-                null,
-                null,
                 null,
                 null,
                 null);
@@ -146,8 +137,6 @@ public class CatalogActivity extends AppCompatActivity {
         String mTestSupplierName = getResources().getString(R.string.test_supplier_name);
         String mTestSupplierPhone = getResources().getString(R.string.test_supplier_phone);
 
-        // Get the database
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Create a new set of ContentValues, this equals one entry
         ContentValues values = new ContentValues();
 
@@ -158,10 +147,11 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, mTestSupplierName);
         values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, mTestSupplierPhone);
 
-        // Insert the values into the Database
-        long newRowId = db.insert(ProductEntry.TABLE_NAME, null, values);
-
-        Log.v("CatalogActivity", "New Row ID: " + newRowId);
+        // Insert a new row for test product into the provider using the ContentResolver.
+        // Use the {@link ProductEntry#CONTENT_URI} to indicate that we want to insert
+        // into the products database table.
+        // Receive the new content URI that will allow us to access "The Client's" data in the future.
+        Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
         // Update displayView after test data has been inserted
         displayDatabaseInfo();

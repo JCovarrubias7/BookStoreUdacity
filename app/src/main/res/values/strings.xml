@@ -34,6 +34,6 @@
     <!-- EditorActivity -->
     <!-- insertProducts-->
     <string name="error_saving">Error with saving product</string>
-    <string name="successful_saving">"Product saved with row ID: "</string>
+    <string name="successful_saving">"Product saved"</string>
 
 </resources>

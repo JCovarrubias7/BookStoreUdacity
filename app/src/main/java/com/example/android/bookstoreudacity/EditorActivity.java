@@ -1,18 +1,16 @@
 package com.example.android.bookstoreudacity;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
-import com.example.android.bookstoreudacity.data.ProductDbHelper;
 
 /**
  * Allows the user to create a new pet.
@@ -57,6 +55,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void insertProduct() {
+        // Read from input fields
+        // Use trim to eliminate leading or trailing white space
         String productNameString = mProductNameEditText.getText().toString().trim();
         String productPriceString = mProductPriceEditText.getText().toString().trim();
         double productPriceDouble = Double.parseDouble(productPriceString);
@@ -65,9 +65,8 @@ public class EditorActivity extends AppCompatActivity {
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneNumberString = mSupplierPhoneNumber.getText().toString().trim();
 
-        ProductDbHelper mDbHelper = new ProductDbHelper(this);
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
+        // Create a ContentValues object where column names are the keys,
+        // and product attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, productNameString);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, productPriceDouble);
@@ -75,18 +74,16 @@ public class EditorActivity extends AppCompatActivity {
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
         values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneNumberString);
 
-        long newRowId = db.insert(ProductEntry.TABLE_NAME, null, values);
-
-        Log.v("EditorActivity", "New Row ID: " + newRowId);
+        // Insert a new product into the provider, returning the content URI for the new product.
+        Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
         //Toast message
         String mErrorSaving = getResources().getString(R.string.error_saving);
         String mSuccessfulSaving = getResources().getString(R.string.successful_saving);
-        String successfulMessage = mSuccessfulSaving + newRowId;
-        if (newRowId == -1) {
+        if (newUri == null) {
             Toast.makeText(this, mErrorSaving, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, successfulMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, mSuccessfulSaving, Toast.LENGTH_SHORT).show();
         }
     }
 

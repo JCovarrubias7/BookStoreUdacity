@@ -16,14 +16,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditorActivity"
+        <activity
+            android:name=".EditorActivity"
             android:label="Add a Product"
-            android:theme="@style/EditorTheme"
-            android:parentActivityName=".CatalogActivity" >
+            android:parentActivityName=".CatalogActivity"
+            android:theme="@style/EditorTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CatalogActivity" />
         </activity>
+
+        <provider
+            android:name=".data.ProductProvider"
+            android:authorities="com.example.android.bookstoreudacity"
+            android:exported="false" />
     </application>
 
 </manifest>

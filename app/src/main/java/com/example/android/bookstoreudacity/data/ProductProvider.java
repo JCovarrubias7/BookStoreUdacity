@@ -16,12 +16,18 @@ import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
  */
 public class ProductProvider extends ContentProvider {
 
-    /** URI matcher code for the content URI for the products table */
+    /**
+     * Tag for the log messages
+     */
+    public static final String LOG_TAG = ProductProvider.class.getSimpleName();
+    /**
+     * URI matcher code for the content URI for the products table
+     */
     private static final int PRODUCTS = 100;
-
-    /** URI matcher code for the content URI for a single product in the products table */
+    /**
+     * URI matcher code for the content URI for a single product in the products table
+     */
     private static final int PRODUCT_ID = 101;
-
     /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
@@ -46,10 +52,9 @@ public class ProductProvider extends ContentProvider {
         sUriMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_PRODUCTS + "/#", PRODUCT_ID);
     }
 
-    /** Tag for the log messages */
-    public static final String LOG_TAG = ProductProvider.class.getSimpleName();
-
-    /** Database helper object */
+    /**
+     * Database helper object
+     */
     private ProductDbHelper mDbHelper;
 
     /**
@@ -93,7 +98,7 @@ public class ProductProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = ProductEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the products table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
@@ -125,6 +130,32 @@ public class ProductProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertProduct(Uri uri, ContentValues values) {
+        // Check that the name is not null
+        String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Product name is required");
+        }
+        // Check that the price is not a negative number
+        Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
+        if (price != null && price < 0) {
+            throw new IllegalArgumentException("Product requires valid price");
+        }
+        // Check that the quantity is not a negative
+        Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        if (quantity != null && quantity < 0) {
+            throw new IllegalArgumentException("Product requires valid quantity");
+        }
+        // Check supplier name is not null
+        String supplierName = values.getAsString(ProductEntry.COLUMN_SUPPLIER_NAME);
+        if (supplierName == null || supplierName.isEmpty()) {
+            throw new IllegalArgumentException("Supplier name is required");
+        }
+        // Check supplier phone number is not null
+        String supplierPhone = values.getAsString(ProductEntry.COLUMN_SUPPLIER_PHONE);
+        if (supplierPhone == null || supplierPhone.isEmpty()) {
+            throw new IllegalArgumentException("Supplier phone is required");
+        }
+
         // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -145,7 +176,74 @@ public class ProductProvider extends ContentProvider {
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return updateProduct(uri, contentValues, selection, selectionArgs);
+            case PRODUCT_ID:
+                // For the PRODUCT_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateProduct(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    /**
+     * Update products in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more products).
+     * Return the number of rows that were successfully updated.
+     */
+    private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // Check that the name is not null
+        if (values.containsKey(ProductEntry.COLUMN_PRODUCT_NAME)) {
+            String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
+            if (name == null || name.isEmpty()) {
+                throw new IllegalArgumentException("Product name is required");
+            }
+        }
+        // Check that the price is not a negative number
+        if (values.containsKey(ProductEntry.COLUMN_PRODUCT_PRICE)) {
+            Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
+            if (price != null && price < 0) {
+                throw new IllegalArgumentException("Product requires valid price");
+            }
+        }
+        // Check that the quantity is not a negative
+        if (values.containsKey(ProductEntry.COLUMN_PRODUCT_QUANTITY)) {
+            Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+            if (quantity != null && quantity < 0) {
+                throw new IllegalArgumentException("Product requires valid quantity");
+            }
+        }
+        // Check supplier name is not null
+        if (values.containsKey(ProductEntry.COLUMN_SUPPLIER_NAME)) {
+            String supplierName = values.getAsString(ProductEntry.COLUMN_SUPPLIER_NAME);
+            if (supplierName == null || supplierName.isEmpty()) {
+                throw new IllegalArgumentException("Supplier name is required");
+            }
+        }
+        // Check supplier phone number is not null
+        if (values.containsKey(ProductEntry.COLUMN_SUPPLIER_PHONE)) {
+            String supplierPhone = values.getAsString(ProductEntry.COLUMN_SUPPLIER_PHONE);
+            if (supplierPhone == null || supplierPhone.isEmpty()) {
+                throw new IllegalArgumentException("Supplier phone is required");
+            }
+        }
+
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        // Otherwise, get writable database to update the data
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Returns the number of database rows affected by the update statement
+        return database.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     /**
@@ -153,7 +251,22 @@ public class ProductProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        // Get writable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                // Delete all rows that match the selection and selection args
+                return database.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
+            case PRODUCT_ID:
+                // Delete a single row given by the ID in the URI
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return database.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
     }
 
     /**
@@ -161,6 +274,14 @@ public class ProductProvider extends ContentProvider {
      */
     @Override
     public String getType(Uri uri) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return ProductEntry.CONTENT_LIST_TYPE;
+            case PRODUCT_ID:
+                return ProductEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 }

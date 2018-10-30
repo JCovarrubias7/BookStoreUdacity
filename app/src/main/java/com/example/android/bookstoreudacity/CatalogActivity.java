@@ -10,9 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
+import com.example.android.bookstoreudacity.data.ProductCursorAdapter;
 
 // Icon used on FAB used from www.flaticon.com
 // Direct Link https://www.flaticon.com/free-icon/book-and-plus-sign_14037
@@ -68,61 +69,14 @@ public class CatalogActivity extends AppCompatActivity {
                 null,
                 null);
 
-        // Find the view in activity_catalog so we can display the Database
-        TextView displayView = (TextView) findViewById(R.id.text_view_product);
+        // Find the ListView which will be populated with the product data
+        ListView productListView = (ListView) findViewById(R.id.list);
 
-        try {
-            // Set up strings for header
-            String mDisplayViewTableContains = getResources().getString(R.string.display_view_table_contains);
-            String mContainsProducts = getResources().getString(R.string.contains_products);
-            String displayViewHeader = mDisplayViewTableContains + cursor.getCount() + mContainsProducts;
-            String mDashDivider = getResources().getString(R.string.dash_divider);
-            // Create a header that looks like this
-            // The products table contains <number of rows in Cursor> products.
-            //_id - product_name - price - quantity - supplier_name - supplier_phone
-            displayView.setText(displayViewHeader);
-            displayView.append(ProductEntry._ID + mDashDivider +
-                    ProductEntry.COLUMN_PRODUCT_NAME + mDashDivider +
-                    ProductEntry.COLUMN_PRODUCT_PRICE + mDashDivider +
-                    ProductEntry.COLUMN_PRODUCT_QUANTITY + mDashDivider +
-                    ProductEntry.COLUMN_SUPPLIER_NAME + mDashDivider +
-                    ProductEntry.COLUMN_SUPPLIER_PHONE + " \n"
-            );
+        // Setup an Adapter to create a list item for each row of product data in the Cursor.
+        ProductCursorAdapter adapter = new ProductCursorAdapter(this, cursor);
 
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(ProductEntry._ID);
-            int productNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
-            int productPrizeColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
-            int productQuantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
-            int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
-            int supplierPhoneColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_PHONE);
-
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use the index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                // Since it starts in row one, it will go through the columns and get
-                // the value at each index. row 1 column 1-5, then row 2 column 1-5 etc...
-                int currentId = cursor.getInt(idColumnIndex);
-                String currentProductName = cursor.getString(productNameColumnIndex);
-                double currentProductPrize = cursor.getDouble(productPrizeColumnIndex);
-                int currentProductQuantity = cursor.getInt(productQuantityColumnIndex);
-                String currentSupplierName = cursor.getString(supplierNameColumnIndex);
-                String currentSupplierPhone = cursor.getString(supplierPhoneColumnIndex);
-
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentId + mDashDivider +
-                        currentProductName + mDashDivider +
-                        currentProductPrize + mDashDivider +
-                        currentProductQuantity + mDashDivider +
-                        currentSupplierName + mDashDivider +
-                        currentSupplierPhone));
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. this releases all its
-            // resources and make it invalid.
-            cursor.close();
-        }
+        // Attach the adapter to the ListView
+        productListView.setAdapter(adapter);
     }
 
 

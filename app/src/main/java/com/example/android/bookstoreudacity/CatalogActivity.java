@@ -18,6 +18,9 @@ import com.example.android.bookstoreudacity.data.ProductCursorAdapter;
 // Icon used on FAB used from www.flaticon.com
 // Direct Link https://www.flaticon.com/free-icon/book-and-plus-sign_14037
 
+// Icon used for empty view is from https://dumielauxepices.net/wallpaper-137129
+// There is no creator to credit so it goes to the site hosting the image.
+
 public class CatalogActivity extends AppCompatActivity {
 
     @Override
@@ -34,6 +37,13 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Find the ListView which will be populated with the product data
+        ListView productListView = (ListView) findViewById(R.id.list);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        productListView.setEmptyView(emptyView);
     }
 
     /**

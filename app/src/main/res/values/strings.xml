@@ -36,8 +36,15 @@
     <string name="test_supplier_phone">18882804331</string>
 
     <!-- EditorActivity -->
-    <!-- insertProducts-->
-    <string name="error_saving">Error with saving product</string>
-    <string name="successful_saving">"Product saved"</string>
+    <!-- saveProducts-->
+    <string name="editor_activity_inset_product_failed">Error with saving product</string>
+    <string name="editor_activity_insert_product_successful">Product saved</string>
+    <string name="editor_activity_update_product_failed">Error updating product</string>
+    <string name="editor_activity_update_product_successful">Product updated</string>
+
+    <!-- Set a title for EditorActivity -->
+    <string name="editor_activity_title_add_product">Add A Product</string>
+    <string name="editor_activity_title_edit_product">Edit Product</string>
+
 
 </resources>

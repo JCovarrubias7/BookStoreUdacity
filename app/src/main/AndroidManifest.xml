@@ -18,7 +18,6 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:label="Add a Product"
             android:parentActivityName=".CatalogActivity"
             android:theme="@style/EditorTheme">
             <meta-data

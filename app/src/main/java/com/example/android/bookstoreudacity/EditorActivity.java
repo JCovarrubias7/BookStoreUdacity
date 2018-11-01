@@ -1,6 +1,8 @@
 package com.example.android.bookstoreudacity;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,6 +63,23 @@ public class EditorActivity extends AppCompatActivity
      */
     private EditText mSupplierPhoneNumber;
 
+    /**
+     * Boolean flaf that keeps track of whether the product has been edited (true) or not (false)
+     */
+    private boolean mProductHasChanged = false;
+
+    /**
+     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
+     * the view, and we change the mPetHasChanged boolean to true.
+     */
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mProductHasChanged = true;
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -74,6 +95,10 @@ public class EditorActivity extends AppCompatActivity
         if (mCurrentProductUri == null) {
             // This is a new product, so change the app bar to say "Add a product"
             setTitle(getString(R.string.editor_activity_title_add_product));
+
+            // Invalidate the options menu, so the "Delete" menu option can be hidden.
+            // (It doesn't make sense to delete a pet that hasn't been created yet.
+            invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing product, so change app bar to say "Edit Product"
             setTitle(getString(R.string.editor_activity_title_edit_product));
@@ -90,7 +115,14 @@ public class EditorActivity extends AppCompatActivity
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhoneNumber = (EditText) findViewById(R.id.edit_supplier_phone);
 
-
+        // Setup OnTouchListeners on all the input fields, so we can determine if the user
+        // has touched or modified them. This will let us know if there are unsaved changes
+        // or not, if the user tries to leave the editor without saving.
+        mProductNameEditText.setOnTouchListener(mTouchListener);
+        mProductPriceEditText.setOnTouchListener(mTouchListener);
+        mProductQuantityEditText.setOnTouchListener(mTouchListener);
+        mSupplierNameEditText.setOnTouchListener(mTouchListener);
+        mSupplierPhoneNumber.setOnTouchListener(mTouchListener);
     }
 
     private void saveProduct() {
@@ -119,14 +151,14 @@ public class EditorActivity extends AppCompatActivity
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, productNameString);
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
         values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneNumberString);
-
         // If the price is not provided by the user, don't try to parse the string into a
         // double value, use 0 by default.
         if (!TextUtils.isEmpty(productPriceString)) {
             price = Double.parseDouble(productPriceString);
         }
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
-
+        // If the quantity is not provided by the user, don't try to parse the string into an
+        // int value, use 0 by default.
         if (!TextUtils.isEmpty(productQualityString)) {
             quantity = Integer.parseInt(productQualityString);
         }
@@ -177,6 +209,21 @@ public class EditorActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * This method is called after invalidateOptionsMenu(), so that the
+     * menu can be updated (some menu items can be hidden or made visible).
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new pet, hide the "Delete" menu item.
+        if (mCurrentProductUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
@@ -193,11 +240,52 @@ public class EditorActivity extends AppCompatActivity
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // Navigate back to parent activity (CatalogActivity)
-                NavUtils.navigateUpFromSameTask(this);
+                // If the product hasn't changed, continue with navigation up to parent activity
+                // which is the {@link CatalogActivity}
+                if (!mProductHasChanged) {
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
+                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+                // Create a click listener to handle the user confirming that
+                // changes should be discarded.
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User clicked "Discard" button, navigate to parent activity
+                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                            }
+                        };
+                // Show a dialog that notifies the user they have unsaved changes
+                showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method is called when the back button is pressed
+     */
+    @Override
+    public void onBackPressed() {
+        // If the product hasn't changed, continue with handling back button press
+        if (!mProductHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     @Override
@@ -210,7 +298,7 @@ public class EditorActivity extends AppCompatActivity
                 ProductEntry.COLUMN_PRODUCT_PRICE,
                 ProductEntry.COLUMN_PRODUCT_QUANTITY,
                 ProductEntry.COLUMN_SUPPLIER_NAME,
-                ProductEntry.COLUMN_SUPPLIER_PHONE };
+                ProductEntry.COLUMN_SUPPLIER_PHONE};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,
@@ -218,7 +306,7 @@ public class EditorActivity extends AppCompatActivity
                 projection,
                 null,
                 null,
-                null );
+                null);
     }
 
     @Override
@@ -232,14 +320,14 @@ public class EditorActivity extends AppCompatActivity
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of pet attributes that we're interested in
-            int nameColumIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
+            int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
             int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
             int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
             int supplierPhoneColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_PHONE);
 
             // Extract out the value from the Cursor for the given column index
-            String name = cursor.getString(nameColumIndex);
+            String name = cursor.getString(nameColumnIndex);
             Double price = cursor.getDouble(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             String supplierName = cursor.getString(supplierNameColumnIndex);
@@ -263,4 +351,33 @@ public class EditorActivity extends AppCompatActivity
         mSupplierNameEditText.setText("");
         mSupplierPhoneNumber.setText("");
     }
+
+    /**
+     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     *
+     * @param discardButtonClickListener is the click listener for what to do when
+     *                                   the user confirms they want to discard their changes
+     */
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 }

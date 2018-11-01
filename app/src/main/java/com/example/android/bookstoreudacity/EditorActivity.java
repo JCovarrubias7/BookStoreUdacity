@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -97,20 +98,39 @@ public class EditorActivity extends AppCompatActivity
         // Use trim to eliminate leading or trailing white space
         String productNameString = mProductNameEditText.getText().toString().trim();
         String productPriceString = mProductPriceEditText.getText().toString().trim();
-        double productPriceDouble = Double.parseDouble(productPriceString);
         String productQualityString = mProductQuantityEditText.getText().toString().trim();
-        int productQualityInt = Integer.parseInt(productQualityString);
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneNumberString = mSupplierPhoneNumber.getText().toString().trim();
+
+        if (mCurrentProductUri == null &&
+                TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(productPriceString) &&
+                TextUtils.isEmpty(productQualityString) && TextUtils.isEmpty(supplierNameString) &&
+                TextUtils.isEmpty(supplierPhoneNumberString)) {
+            return;
+        }
+
+        // Setting price and quantity to default of zero
+        double price = 0;
+        int quantity = 0;
 
         // Create a ContentValues object where column names are the keys,
         // and product attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, productNameString);
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, productPriceDouble);
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQualityInt);
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
         values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneNumberString);
+
+        // If the price is not provided by the user, don't try to parse the string into a
+        // double value, use 0 by default.
+        if (!TextUtils.isEmpty(productPriceString)) {
+            price = Double.parseDouble(productPriceString);
+        }
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
+
+        if (!TextUtils.isEmpty(productQualityString)) {
+            quantity = Integer.parseInt(productQualityString);
+        }
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
 
         // Determine if this is a new or existing product by checking if mCurrentProductUri is null
         // or not

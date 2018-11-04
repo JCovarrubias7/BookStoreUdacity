@@ -23,18 +23,18 @@ import android.widget.Toast;
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
 
 /**
- * Allows the user to create a new pet.
+ * Allows the user to create a new product.
  */
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
-     * Identifier for the pet data loader
+     * Identifier for the product data loader
      */
     private static final int EXISTING_PRODUCT_LOADER = 0;
 
     /**
-     * Content URI for the existing pet (null if it's a new pet)
+     * Content URI for the existing product (null if it's a new product)
      */
     private Uri mCurrentProductUri;
 
@@ -70,7 +70,7 @@ public class EditorActivity extends AppCompatActivity
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
-     * the view, and we change the mPetHasChanged boolean to true.
+     * the view, and we change the mProductHasChanged boolean to true.
      */
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -86,7 +86,7 @@ public class EditorActivity extends AppCompatActivity
         setContentView(R.layout.activity_editor);
 
         // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new pet or editing one.
+        // in order to figure out if we're creating a new product or editing one.
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
@@ -97,7 +97,7 @@ public class EditorActivity extends AppCompatActivity
             setTitle(getString(R.string.editor_activity_title_add_product));
 
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
-            // (It doesn't make sense to delete a pet that hasn't been created yet.
+            // (It doesn't make sense to delete a product that hasn't been created yet.
             invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing product, so change app bar to say "Edit Product"
@@ -141,10 +141,6 @@ public class EditorActivity extends AppCompatActivity
             return;
         }
 
-        // Setting price and quantity to default of zero
-        double price = 0;
-        int quantity = 0;
-
         // Create a ContentValues object where column names are the keys,
         // and product attributes from the editor are the values.
         ContentValues values = new ContentValues();
@@ -153,12 +149,15 @@ public class EditorActivity extends AppCompatActivity
         values.put(ProductEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneNumberString);
         // If the price is not provided by the user, don't try to parse the string into a
         // double value, use 0 by default.
+        // Setting price and quantity to default of zero
+        double price = 0;
         if (!TextUtils.isEmpty(productPriceString)) {
             price = Double.parseDouble(productPriceString);
         }
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
         // If the quantity is not provided by the user, don't try to parse the string into an
         // int value, use 0 by default.
+        int quantity = 0;
         if (!TextUtils.isEmpty(productQualityString)) {
             quantity = Integer.parseInt(productQualityString);
         }
@@ -184,7 +183,7 @@ public class EditorActivity extends AppCompatActivity
         } else {
             // Otherwise this is an EXISTING product, so update the product with content
             // URI: mCurrentProductUri and pass in the new ContentValues. Pass in null for the
-            // selection and selection args because mCurrentPetUri will already identify the
+            // selection and selection args because mCurrentProductUri will already identify the
             // correct row in the database that we want to modify.
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
 
@@ -216,7 +215,7 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
+        // If this is a new product, hide the "Delete" menu item.
         if (mCurrentProductUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -234,7 +233,8 @@ public class EditorActivity extends AppCompatActivity
                 saveProduct();
                 // Exit activity
                 finish();
-                // Respond to a click on the "Delete" menu option
+                return true;
+            // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
                 return true;
@@ -319,7 +319,7 @@ public class EditorActivity extends AppCompatActivity
         // Proceed with moving to the first row of the cursor and reading data from it
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
+            // Find the columns of product attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
             int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
@@ -369,7 +369,7 @@ public class EditorActivity extends AppCompatActivity
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the product.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -410,10 +410,10 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Perform the deletion of the pet in the database.
+     * Perform the deletion of the product in the database.
      */
     private void deleteProduct() {
-        // Only perform the delete if this is an existing pet.
+        // Only perform the delete if this is an existing product.
         if (mCurrentProductUri != null) {
             // Call the ContentResolver to delete the product at the given content URI.
             // Pass in null for the selection and selection args because the mCurrentProductUri

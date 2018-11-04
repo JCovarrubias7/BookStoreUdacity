@@ -35,6 +35,12 @@
     <string name="test_supplier_name">Amazon</string>
     <string name="test_supplier_phone">18882804331</string>
 
+    <!-- showDeleteConfirmationDialog -->
+    <string name="catalog_delete_dialog_msg">Delete all products?</string>
+    <!-- deleteAllPets -->
+    <string name="catalog_delete_all_products_successful">All products deleted</string>
+    <string name="catalog_delete_all_products_failed">Error with deleting all products</string>
+
     <!-- EditorActivity -->
     <!-- saveProducts-->
     <string name="editor_activity_inset_product_failed">Error with saving product</string>
@@ -53,11 +59,9 @@
     <string name="discard">Discard</string>
     <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
-
     <!-- showDeleteConfirmationDialog -->
     <string name="delete_dialog_msg">Delete this product?</string>
     <string name="cancel">Cancel</string>
-
     <!-- deleteProduct -->
     <string name="editor_delete_product_successful">Product deleted</string>
     <string name="editor_delete_product_failed">Error with deleting product</string>

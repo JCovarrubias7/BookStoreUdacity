@@ -159,7 +159,8 @@ public class CatalogActivity extends AppCompatActivity
         String[] projection = {
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductEntry.COLUMN_PRODUCT_PRICE};
+                ProductEntry.COLUMN_PRODUCT_PRICE,
+                ProductEntry.COLUMN_PRODUCT_QUANTITY};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,

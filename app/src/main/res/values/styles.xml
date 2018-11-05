@@ -50,4 +50,39 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <!-- Parent Linear Layout for list item -->
+    <style name="ListItemParentLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- Child Linear Layout for list item -->
+    <style name="ListItemChildLayout">
+        <item name="android:layout_width">@dimen/list_item_child_layout_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- Style for label text view in list_item -->
+    <style name="ListItemLabelTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">#AEB6BD</item>
+    </style>
+
+    <!-- Style for text view in list_item -->
+    <style name="ListItemTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textColor">#AEB6BD</item>
+    </style>
+
 </resources>

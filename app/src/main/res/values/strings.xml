@@ -2,8 +2,8 @@
     <string name="app_name">BookStoreUdacity</string>
 
     <!-- activity_catalog -->
-    <string name="empty_view_title_text">"What a lonely store..."</string>
-    <string name="empty_view_subtitle_text">Get started by adding a product</string>
+    <string name="empty_view_title_text">What a lonely store&#8230;</string>
+    <string name="empty_view_subtitle_text">Click the button to add a product</string>
 
     <!-- activity_editor -->
     <string name="product_info">Product Info</string>
@@ -65,5 +65,12 @@
     <!-- deleteProduct -->
     <string name="editor_delete_product_successful">Product deleted</string>
     <string name="editor_delete_product_failed">Error with deleting product</string>
+
+    <!-- list_item.xml -->
+    <string name="price_label">Price: $</string>
+    <string name="price_example_tools">9.99</string>
+    <string name="quantity_label">Quantity:</string>
+    <string name="quantity_example_tools">100</string>
+    <string name="sale_button_label">Sale</string>
 
 </resources>

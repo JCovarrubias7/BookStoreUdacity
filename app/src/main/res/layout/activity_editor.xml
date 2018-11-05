@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/parent_linear_layoutt_padding"
+    android:padding="@dimen/parent_linear_layout_padding"
     tools:context=".EditorActivity">
 
     <LinearLayout style="@style/CategoryParentLayout">

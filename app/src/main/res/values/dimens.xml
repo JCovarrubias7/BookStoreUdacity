@@ -8,7 +8,7 @@
 
     <!-- activity_editor -->
     <!-- Parent Linear Layout -->
-    <dimen name="parent_linear_layoutt_padding">16dp</dimen>
+    <dimen name="parent_linear_layout_padding">16dp</dimen>
 
     <!-- styles -->
     <dimen name="category_child_layout_width">0dp</dimen>
@@ -16,5 +16,12 @@
 
     <dimen name="category_style_width">0dp</dimen>
     <dimen name="category_style_padding_top">16dp</dimen>
+
+    <!-- list_item -->
+    <dimen name="list_item_parent_layout_padding">16dp</dimen>
+    <dimen name="view_margin">64dp</dimen>
+    <dimen name="view_height">1dp</dimen>
+    <dimen name="list_item_child_layout_width">0dp</dimen>
+
 
 </resources>

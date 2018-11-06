@@ -119,8 +119,7 @@ public class CatalogActivity extends AppCompatActivity
         // Insert a new row for test product into the provider using the ContentResolver.
         // Use the {@link ProductEntry#CONTENT_URI} to indicate that we want to insert
         // into the products database table.
-        // Receive the new content URI that will allow us to access "The Client's" data in the future.
-        Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+        getContentResolver().insert(ProductEntry.CONTENT_URI, values);
     }
 
     /**

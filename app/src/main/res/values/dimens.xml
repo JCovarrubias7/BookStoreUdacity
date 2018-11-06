@@ -2,7 +2,8 @@
 <resources>
     <!-- activity_catalog -->
     <!-- TextView -->
-    <dimen name="activity_catalog_padding">16dp</dimen>
+    <dimen name="activity_catalog_title_text_padding_top">16dp</dimen>
+    <dimen name="activity_catalog_subtitle_text_padding_top">8dp</dimen>
     <!-- Floating Action Button -->
     <dimen name="fab_margin">16dp</dimen>
 
@@ -18,7 +19,6 @@
 
     <dimen name="category_style_width">0dp</dimen>
     <dimen name="category_style_padding_top">16dp</dimen>
-
 
     <!-- list_item -->
     <dimen name="list_item_parent_layout_padding">16dp</dimen>

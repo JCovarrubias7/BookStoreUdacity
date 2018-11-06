@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
 
@@ -98,6 +99,13 @@ public class ProductCursorAdapter extends CursorAdapter {
 
                 if (quantity > 0) {
                     quantity--;
+                }
+                // Show toast if product is at zero so the user is reminded to order more products.
+                // Get the right context
+                // https://stackoverflow.com/questions/13927601/how-to-show-toast-in-a-class-extended-by-baseadapter-get-view-method
+                // Post Author: Andro Selva and edited: Steve Kamau
+                if (quantity == 0) {
+                    Toast.makeText(v.getContext(), R.string.order_more_products_toast, Toast.LENGTH_SHORT).show();
                 }
                 // Content Values to update quantity like {@link CatalogActivity} line 110
                 ContentValues values = new ContentValues();

@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -127,12 +128,9 @@ public class EditorActivity extends AppCompatActivity
                 if (!TextUtils.isEmpty(productQuantity)) {
                     quantity = Integer.parseInt(productQuantity);
                 }
-                if (quantity == 0) {    // https://www.cs.umd.edu/~clin/MoreJava/ControlFlow/nested-if.html
-                    quantity = 0;
-                    mProductQuantityEditText.setText(Integer.toString(quantity));
-                    return;
+                if (quantity > 0) {    // https://www.cs.umd.edu/~clin/MoreJava/ControlFlow/nested-if.html
+                    quantity--;
                 }
-                quantity--;
                 mProductQuantityEditText.setText(Integer.toString(quantity));
             }
         });
@@ -158,7 +156,8 @@ public class EditorActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 String phoneNumber = mSupplierPhoneNumber.getText().toString().trim();
-                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                String telUri = getString(R.string.editor_activity_tel_uri) + phoneNumber;
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(telUri));
                 startActivity(callIntent);
             }
         });
@@ -173,10 +172,11 @@ public class EditorActivity extends AppCompatActivity
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneNumberString = mSupplierPhoneNumber.getText().toString().trim();
 
-        if (mCurrentProductUri == null &&
-                TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(productPriceString) &&
-                TextUtils.isEmpty(productQualityString) && TextUtils.isEmpty(supplierNameString) &&
+        // Check to see that all fields have data and show a toast to let the user know.
+        if (TextUtils.isEmpty(productNameString) || TextUtils.isEmpty(productPriceString) ||
+                TextUtils.isEmpty(productQualityString) || TextUtils.isEmpty(supplierNameString) ||
                 TextUtils.isEmpty(supplierPhoneNumberString)) {
+            Toast.makeText(this, getString(R.string.editor_activity_fill_fields_toast), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -237,6 +237,8 @@ public class EditorActivity extends AppCompatActivity
                         Toast.LENGTH_SHORT).show();
             }
         }
+        // Exit activity
+        finish();
     }
 
     @Override
@@ -268,10 +270,15 @@ public class EditorActivity extends AppCompatActivity
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
+                // To hide the Keyboard when save button is clicked.
+                // https://stackoverflow.com/questions/13721049/how-to-hide-default-keyboard-when-click-on-menu
+                // Post Author: Nermeen
+                if (this.getCurrentFocus() != null && this.getCurrentFocus() instanceof EditText) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 // Save product to DB
                 saveProduct();
-                // Exit activity
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -378,8 +385,6 @@ public class EditorActivity extends AppCompatActivity
             mProductQuantityEditText.setText(Integer.toString(quantity));
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumber.setText(phone);
-
-
         }
     }
 

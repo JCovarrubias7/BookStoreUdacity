@@ -45,7 +45,9 @@
     <string name="catalog_delete_all_products_failed">Error with deleting all products</string>
 
     <!-- EditorActivity -->
+    <string name="editor_activity_tel_uri">tel:</string>
     <!-- saveProducts-->
+    <string name="editor_activity_fill_fields_toast">Please fill in all fields.</string>
     <string name="editor_activity_inset_product_failed">Error with saving product</string>
     <string name="editor_activity_insert_product_successful">Product saved</string>
     <string name="editor_activity_update_product_failed">Error updating product</string>
@@ -75,5 +77,9 @@
     <string name="quantity_label">Quantity:</string>
     <string name="quantity_example_tools">100</string>
     <string name="sale_button_label">Sale</string>
+
+    <!-- ProductCursorAdapter -->
+    <string name="order_more_products_toast">Time to order more products</string>
+
 
 </resources>

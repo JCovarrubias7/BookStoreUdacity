@@ -1,10 +1,13 @@
 package com.example.android.bookstoreudacity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -52,12 +55,12 @@ public class ProductCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         // First, find the TextViews via id
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
         TextView priceTextView = (TextView) view.findViewById(R.id.price);
-        TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
+        final TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
 
         // Next we need product data from the current row on the cursor
         // Find the columns of product attributes that we'ere interested on
@@ -65,14 +68,44 @@ public class ProductCursorAdapter extends CursorAdapter {
         int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
 
-        // Read out the pet attributes from the Cursor for the current pet
+        // Read out the product attributes from the Cursor for the current product
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
         String productQuantity = cursor.getString(quantityColumnIndex);
 
-        // Update the TextView with the attributes for the current pet
+        // Update the TextView with the attributes for the current product
         nameTextView.setText(productName);
         priceTextView.setText(productPrice);
         quantityTextView.setText(productQuantity);
+
+        /**
+         * Sale Button logic.
+         * This was achieved with help from
+         * https://stackoverflow.com/questions/44034208/updating-listview-with-cursoradapter-after-an-onclick-changes-a-value-in-sqlite
+         * Post Author: P Fuster
+         */
+        // Find the saleButton
+        Button saleButton = view.findViewById(R.id.sale_button);
+        // Get the current ID from the cursor
+        int currentId = cursor.getInt(cursor.getColumnIndex(ProductEntry._ID));
+        // Get the Uri with the current ID
+        final Uri contentUri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, Integer.toString(currentId));
+
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int quantity = Integer.valueOf(quantityTextView.getText().toString());
+
+                if (quantity > 0) {
+                    quantity--;
+                }
+                // Content Values to update quantity like {@link CatalogActivity} line 110
+                ContentValues values = new ContentValues();
+                // Add the quantity to the values variable.
+                values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+                // Update the database with the new values from above.
+                context.getContentResolver().update(contentUri, values,null,null);
+            }
+        });
     }
 }

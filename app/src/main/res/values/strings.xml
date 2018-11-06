@@ -2,6 +2,7 @@
     <string name="app_name">BookStoreUdacity</string>
 
     <!-- activity_catalog -->
+    <string name="empty_bookshelf_description">An image of an empty bookshelf</string>
     <string name="empty_view_title_text">What a lonely store&#8230;</string>
     <string name="empty_view_subtitle_text">Click the button to add a product</string>
 
@@ -80,6 +81,5 @@
 
     <!-- ProductCursorAdapter -->
     <string name="order_more_products_toast">Time to order more products</string>
-
 
 </resources>

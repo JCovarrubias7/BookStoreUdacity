@@ -18,17 +18,19 @@
         android:layout_centerInParent="true">
 
         <ImageView
-            android:id="@+id/empty_shelter_image"
+            android:id="@+id/empty_bookshelf_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@string/empty_bookshelf_description"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_empty_shelf" />
 
         <TextView
             android:id="@+id/empty_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/empty_shelter_image"
+            android:layout_below="@+id/empty_bookshelf_image"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:paddingTop="@dimen/activity_catalog_title_text_padding_top"
@@ -45,7 +47,7 @@
             android:paddingTop="@dimen/activity_catalog_subtitle_text_padding_top"
             android:text="@string/empty_view_subtitle_text"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0" />
+            android:textColor="@color/subtitleTextColor" />
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

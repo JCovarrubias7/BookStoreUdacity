@@ -5,4 +5,8 @@
     <color name="colorAccent">#e38b75</color>
     <color name="editorColorPrimary">#517D87</color>
     <color name="editorColorPrimaryDark">#2b616d</color>
+
+    <!-- activity_catalog -->
+    <!-- subtitle font -->
+    <color name="subtitleTextColor">#A2AAB0</color>
 </resources>

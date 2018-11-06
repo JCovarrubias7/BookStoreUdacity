@@ -27,11 +27,6 @@
     <string name="delete">Delete</string>
 
     <!-- CatalogActivity -->
-    <!-- displayDatabaseInfo -->
-    <string name="display_view_table_contains">"The products table contains "</string>
-    <string name="contains_products">" products \n\n"</string>
-    <string name="dash_divider">" - "</string>
-
     <!-- insertTestProduct -->
     <string name="test_name">The Client</string>
     <string name="test_price">9.99</string>

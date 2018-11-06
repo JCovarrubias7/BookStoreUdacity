@@ -2,6 +2,7 @@ package com.example.android.bookstoreudacity;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,45 +30,34 @@ import com.example.android.bookstoreudacity.data.ProductContract.ProductEntry;
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /**
-     * Identifier for the product data loader
-     */
+    /** Identifier for the product data loader */
     private static final int EXISTING_PRODUCT_LOADER = 0;
 
-    /**
-     * Content URI for the existing product (null if it's a new product)
-     */
+    /** Content URI for the existing product (null if it's a new product) */
     private Uri mCurrentProductUri;
 
-    /**
-     * EditText field to enter product name
-     */
+    /** EditText field to enter product name */
     private EditText mProductNameEditText;
 
-    /**
-     * EditText field to enter product price
-     */
+    /** EditText field to enter product price */
     private EditText mProductPriceEditText;
 
-    /**
-     * EditText field to enter product quantity
-     */
+    /** EditText field to enter product quantity */
     private EditText mProductQuantityEditText;
 
-    /**
-     * EditText field to enter the supplier name
-     */
+    /** EditText field to enter the supplier name */
     private EditText mSupplierNameEditText;
 
-    /**
-     * EditText field to enter the supplier phone number
-     */
+    /** EditText field to enter the supplier phone number */
     private EditText mSupplierPhoneNumber;
 
-    /**
-     * Boolean flaf that keeps track of whether the product has been edited (true) or not (false)
-     */
+    /** Boolean flag that keeps track of whether the product has been edited (true) or not (false) */
     private boolean mProductHasChanged = false;
+
+    /** Get buttons to set decrement, increment, and call */
+    private Button mDecrement;
+    private Button mIncrement;
+    private Button mCallSupplier;
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -114,6 +105,9 @@ public class EditorActivity extends AppCompatActivity
         mProductQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhoneNumber = (EditText) findViewById(R.id.edit_supplier_phone);
+        mDecrement = (Button) findViewById(R.id.decrement_button);
+        mIncrement = (Button) findViewById(R.id.increment_button);
+        mCallSupplier = (Button) findViewById(R.id.call_supplier_button);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -123,6 +117,51 @@ public class EditorActivity extends AppCompatActivity
         mProductQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneNumber.setOnTouchListener(mTouchListener);
+
+        // Decrease quantity by one when decrement button is clicked.
+        mDecrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int quantity = 0;
+                String productQuantity = mProductQuantityEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(productQuantity)) {
+                    quantity = Integer.parseInt(productQuantity);
+                }
+                if (quantity == 0) {    // https://www.cs.umd.edu/~clin/MoreJava/ControlFlow/nested-if.html
+                    quantity = 0;
+                    mProductQuantityEditText.setText(Integer.toString(quantity));
+                    return;
+                }
+                quantity--;
+                mProductQuantityEditText.setText(Integer.toString(quantity));
+            }
+        });
+
+        // Increase quantity by one when the increment button is clicked.
+        mIncrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int quantity = 0;
+                String productQuantity = mProductQuantityEditText.getText().toString().trim();
+                if (!TextUtils.isEmpty(productQuantity)) {
+                    quantity = Integer.parseInt(productQuantity);
+                }
+                quantity++;
+                mProductQuantityEditText.setText(Integer.toString(quantity));
+            }
+        });
+
+        // Set Call intent on supplier phone number button
+        // https://stackoverflow.com/questions/10510395/call-intent-in-android
+        // post author: Shashank Kadne
+        mCallSupplier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneNumber = mSupplierPhoneNumber.getText().toString().trim();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            }
+        });
     }
 
     private void saveProduct() {
@@ -339,6 +378,8 @@ public class EditorActivity extends AppCompatActivity
             mProductQuantityEditText.setText(Integer.toString(quantity));
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumber.setText(phone);
+
+
         }
     }
 
@@ -362,7 +403,7 @@ public class EditorActivity extends AppCompatActivity
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the postivie and negative buttons on the dialog.
+        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);

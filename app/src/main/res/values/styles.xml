@@ -50,6 +50,13 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <!-- Style for Increment and decrement buttons -->
+    <style name="ActivityEditorButtons">
+        <item name="android:layout_width">@dimen/button_layout_width</item>
+        <item name="android:layout_height">@dimen/button_layout_height</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <!-- Parent Linear Layout for list item -->
     <style name="ListItemParentLayout">
         <item name="android:layout_width">match_parent</item>

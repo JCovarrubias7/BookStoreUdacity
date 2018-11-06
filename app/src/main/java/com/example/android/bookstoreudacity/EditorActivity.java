@@ -55,11 +55,6 @@ public class EditorActivity extends AppCompatActivity
     /** Boolean flag that keeps track of whether the product has been edited (true) or not (false) */
     private boolean mProductHasChanged = false;
 
-    /** Get buttons to set decrement, increment, and call */
-    private Button mDecrement;
-    private Button mIncrement;
-    private Button mCallSupplier;
-
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mProductHasChanged boolean to true.
@@ -106,9 +101,9 @@ public class EditorActivity extends AppCompatActivity
         mProductQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhoneNumber = (EditText) findViewById(R.id.edit_supplier_phone);
-        mDecrement = (Button) findViewById(R.id.decrement_button);
-        mIncrement = (Button) findViewById(R.id.increment_button);
-        mCallSupplier = (Button) findViewById(R.id.call_supplier_button);
+        Button mDecrement = (Button) findViewById(R.id.decrement_button);
+        Button mIncrement = (Button) findViewById(R.id.increment_button);
+        Button mCallSupplier = (Button) findViewById(R.id.call_supplier_button);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes

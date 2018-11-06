@@ -18,7 +18,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "bookstore.db";
 
     /**
-     * Database version. If you change the database schema, you must increment the databse verison. *
+     * Database version. If you change the database schema, you must increment the database version. *
      */
     private static final int DATABASE_VERSION = 1;
 
